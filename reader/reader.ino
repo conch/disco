@@ -1,8 +1,10 @@
 #include <Wire.h>
 #include <EEPROM.h>
 
-int addr = 0;
+int saddr = 0;
+int addr_offset = 0;
 int eeprom_size = 1024; // number of bytes in EEPROM for Atmega328
+int correct_handshake[] = {104, 101, 108, 108, 111, 10};
 
 void setup()
 {
@@ -11,27 +13,34 @@ void setup()
 
 void loop()
 {
-  if (Serial.available() > 0)
+  if (Serial.available() > 0 && handshake_is_correct())
   {
-    clean_serial_buffer();
-    for (int i = 0; i < eeprom_size; i+=2)
+    for (int i = 0; i < eeprom_size; i += 9)
     {
       int sign = EEPROM.read(i);
-      int roll = EEPROM.read(i + 1);
-      if ((sign >> 7) == 1)
-        roll = -roll;
-      Serial.println(roll, DEC);
+      for (int j = 0; j < 8; j++)
+      {
+        int roll = EEPROM.read(i + j + 1);
+        if ((sign >> j) & 1 == 1)
+          roll = -roll;
+        Serial.println(roll, DEC);
+      }
     }
   }
 }
 
-void clean_serial_buffer()
+boolean handshake_is_correct()
 {
-  // need to clean out the handshake
-  // otherwise those bytes will be there forever
-  int avai = Serial.available();
-  for (int i = 0; i < avai; i++)
+  // verify that the handshake is "hello"
+  // only send data if the handshake is correct
+  if (Serial.available() == 6)
   {
-    Serial.read();
+    for (int i = 0; i < 6; i++)
+    {
+      if (Serial.read() != correct_handshake[i])
+        return false;
+    }
+    return true;
   }
+  return false;
 }
