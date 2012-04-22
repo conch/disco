@@ -11,7 +11,8 @@ void setup()
 {
   nunchuk_init();
   pinMode(13, OUTPUT);
-  delay(400);
+  clear_eeprom();
+  digitalWrite(13, HIGH);
 }
 
 void loop()
@@ -53,4 +54,13 @@ void record()
   } else
     EEPROM.write(saddr, EEPROM.read(saddr) & ~(1 << addr_offset));
   EEPROM.write(saddr + addr_offset + 1, roll);
+}
+
+void clear_eeprom()
+{
+  // reset the memory to 0s at the start of each photoshoot
+  for (int i = 0; i < eeprom_size; i++)
+  {
+    EEPROM.write(i, 0);
+  }
 }
