@@ -11,6 +11,7 @@ void setup()
 {
   nunchuk_init();
   pinMode(13, OUTPUT);
+  delay(400);
 }
 
 void loop()
