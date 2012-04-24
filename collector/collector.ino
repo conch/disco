@@ -6,20 +6,22 @@
 int saddr = 0; // address of the byte that stores the signs of the next 8 bytes
 int addr_offset = 0; // address of the current normal byte (not a sign byte), ranges between 0 and 7
 int eeprom_size = 1024;
+volatile int state = LOW;
 
 void setup()
 {
   nunchuk_init();
   pinMode(13, OUTPUT);
   clear_eeprom();
+  attachInterrupt(0, change_state, FALLING);
   digitalWrite(13, HIGH);
 }
 
 void loop()
 {
-  nunchuk_get_data();
-  if (nunchuk_zbutton() == 1)
+  if (state != LOW)
   {
+    nunchuk_get_data();
     // check if EEPROM is full already
     // turn on light if it is
     if (saddr + addr_offset + 1 >= eeprom_size)
@@ -31,10 +33,15 @@ void loop()
         addr_offset = 0;
       } else
         addr_offset++;
-      }
-  }
+     }
 
-  delay(100);
+     change_state();
+  }
+}
+
+void change_state()
+{
+  state = !state;
 }
 
 void full()
