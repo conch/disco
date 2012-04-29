@@ -11,7 +11,7 @@ for photo_uuid in sys.argv[2:]:
   if photo_uuids != "":
     photo_uuids += str(", ")
   photo_uuids += "'" + photo_uuid + "'"
-query = "select image, text, id_global from Adobe_imageDevelopSettings join Adobe_images on Adobe_imageDevelopSettings.image = Adobe_images.id_local"
+query = "select image, text from Adobe_imageDevelopSettings join Adobe_images on Adobe_imageDevelopSettings.image = Adobe_images.id_local"
 if photo_uuids != "":
   query += " where id_global in (" + photo_uuids + ")"
 query += " order by Adobe_images.captureTime asc"
