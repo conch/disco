@@ -10,5 +10,5 @@ return {
         file = "ShowDialog.lua",
     }
   },
-  VERSION = { major=3, minor=0, revision=0, build=200000, }
+  VERSION = { major = 1, minor = 0, revision = 0, build=1, }
 }
