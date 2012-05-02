@@ -1,7 +1,6 @@
 local LrFunctionContext = import 'LrFunctionContext'
 local LrDialogs = import 'LrDialogs'
 local LrApplication = import 'LrApplication'
-local LrShell = import 'LrShell'
 local LrTasks = import 'LrTasks'
 
 local function showDialog()
@@ -14,7 +13,7 @@ local function showDialog()
         for key, value in next, photos, nil do
           photoUuids = photoUuids .. " " .. value:getRawMetadata("uuid")
         end
-        LrTasks.execute("python ~/write_to_sqlite.py " .. catalog:getPath():gsub(" ", "\\ ") .. photoUuids)
+        LrTasks.execute("python /usr/bin/disco_write_to_sqlite.py " .. catalog:getPath():gsub(" ", "\\ ") .. photoUuids)
       end
   end)
 end
