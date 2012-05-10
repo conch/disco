@@ -72,9 +72,9 @@
 //
 #define DEFAULT_CENTRE_JOY_X 124
 #define DEFAULT_CENTRE_JOY_Y 132
-#define ACCEL_ZEROX 473
+#define ACCEL_ZEROX 449
 #define ACCEL_ZEROY 516
-#define ACCEL_ZEROZ 508
+#define ACCEL_ZEROZ 506
 
 //
 // Global vars are kept to a minimum.
