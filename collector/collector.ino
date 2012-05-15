@@ -12,19 +12,29 @@ int data[] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 
 void setup()
 {
-//  Serial.begin(19200);
   nunchuk_init();
   pinMode(13, OUTPUT);
   clear_eeprom();
-  attachInterrupt(0, change_state, FALLING);
+//  attachInterrupt(0, change_state, FALLING);
   digitalWrite(13, HIGH);
 }
 
 void loop()
 {
-  if (times == 10 && state != LOW) {
-    // check if EEPROM is full already
-    // turn on light if it is
+  nunchuk_get_data();
+  if (nunchuk_zbutton() == 1 || nunchuk_cbutton() == 1) {
+    times = 0;
+  }
+  if (times < 10 && times > -1) {
+    int r = nunchuk_rollangle();
+    if (r < 0) {
+      r = -(r + 180);
+    } else {
+      r = 180 - r;
+    }
+    data[times] = r;
+    times++;
+  } else if (times == 10) {
     if (saddr + addr_offset + 1 >= eeprom_size)
       full();
     else {
@@ -35,21 +45,9 @@ void loop()
       } else
         addr_offset++;
      }
-
-     change_state();
-     times = 0;
-  } else {
-    if (state != LOW) {
-      nunchuk_get_data();
-      data[times] = nunchuk_rollangle() + 180;
-      times++;
-    }
+     
+     times = -1;
   }
-}
-
-void change_state()
-{
-  state = !state;
 }
 
 void full()
@@ -60,8 +58,12 @@ void full()
 void record()
 {
   digitalWrite(13, LOW);
-  int roll = (data[4] + data[5]) / 2;
-//  Serial.println(roll, DEC);
+  // average the last 10 samples
+  int sum = 0;
+  for (int i = 0; i < 10; i++) {
+    sum += data[i];
+  }
+  int roll = sum / 10;
   // use two bytes to store each number
   // bit is 1 if number is negative. 0 if it's positive.
   if (roll < 0) {
