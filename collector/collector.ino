@@ -15,15 +15,16 @@ void setup()
   nunchuk_init();
   pinMode(13, OUTPUT);
   clear_eeprom();
-//  attachInterrupt(0, change_state, FALLING);
+  attachInterrupt(0, change_state, FALLING);
   digitalWrite(13, HIGH);
 }
 
 void loop()
 {
   nunchuk_get_data();
-  if (nunchuk_zbutton() == 1 || nunchuk_cbutton() == 1) {
+  if (state == HIGH) {
     times = 0;
+    change_state();
   }
   if (times < 10 && times > -1) {
     int r = nunchuk_rollangle();
@@ -48,6 +49,11 @@ void loop()
      
      times = -1;
   }
+}
+
+void change_state()
+{
+  state = !state;
 }
 
 void full()
