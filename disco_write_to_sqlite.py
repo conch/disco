@@ -42,4 +42,4 @@ commands.getstatusoutput("open /Applications/Adobe\ Photoshop\ Lightroom\ 4.app"
 
 def convert_acc_to_lr(angle, focal):
   ratio = 4.26959 - (0.225898 * focal) + (0.00472149 * focal * focal) - (0.000023727 * focal * focal * focal)
-  return (angle * ratio)
+  return str(int(round(angle * ratio)))
