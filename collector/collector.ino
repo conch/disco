@@ -6,7 +6,6 @@
 int saddr = 0; // address of the byte that stores the signs of the next 8 bytes
 int addr_offset = 0; // address of the current normal byte (not a sign byte), ranges between 0 and 7
 int eeprom_size = 1024;
-volatile int state = LOW;
 int times = 0; // used for average
 int data[] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 
@@ -15,7 +14,6 @@ void setup()
   nunchuk_init();
   pinMode(13, OUTPUT);
   clear_eeprom();
-//  attachInterrupt(0, change_state, FALLING);
   digitalWrite(13, HIGH);
 }
 
